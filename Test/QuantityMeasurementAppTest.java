@@ -4,22 +4,26 @@ import static org.junit.jupiter.api.Assertions.*;
 class QuantityMeasurementAppTest {
 
     @Test
-    void testFeetEquality_SameValue() {
-        assertTrue(QuantityMeasurementApp.compareFeet(1.0, 1.0));
+    void testFeetToFeet_SameValue() {
+        assertTrue(new QuantityLength(1.0, LengthUnit.FEET)
+                .equals(new QuantityLength(1.0, LengthUnit.FEET)));
     }
 
     @Test
-    void testFeetEquality_DifferentValue() {
-        assertFalse(QuantityMeasurementApp.compareFeet(1.0, 2.0));
+    void testInchToFeet_Equivalent() {
+        assertTrue(new QuantityLength(12.0, LengthUnit.INCH)
+                .equals(new QuantityLength(1.0, LengthUnit.FEET)));
     }
 
     @Test
-    void testInchesEquality_SameValue() {
-        assertTrue(QuantityMeasurementApp.compareInches(1.0, 1.0));
+    void testDifferentValues() {
+        assertFalse(new QuantityLength(1.0, LengthUnit.FEET)
+                .equals(new QuantityLength(2.0, LengthUnit.FEET)));
     }
 
     @Test
-    void testInchesEquality_DifferentValue() {
-        assertFalse(QuantityMeasurementApp.compareInches(1.0, 2.0));
+    void testNullComparison() {
+        QuantityLength q = new QuantityLength(1.0, LengthUnit.FEET);
+        assertFalse(q.equals(null));
     }
 }
