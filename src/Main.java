@@ -1,13 +1,52 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-void main() {
-    //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-    // to see how IntelliJ IDEA suggests fixing it.
-    IO.println(String.format("Hello and welcome!"));
+class QuantityMeasurementApp {
 
-    for (int i = 1; i <= 5; i++) {
-        //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-        // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-        IO.println("i = " + i);
+    // Feet class
+    static class Feet {
+        private final double value;
+
+        public Feet(double value) {
+            this.value = value;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (obj == null || getClass() != obj.getClass()) return false;
+
+            Feet other = (Feet) obj;
+            return Double.compare(this.value, other.value) == 0;
+        }
+    }
+
+    // Inches class
+    static class Inches {
+        private final double value;
+
+        public Inches(double value) {
+            this.value = value;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (obj == null || getClass() != obj.getClass()) return false;
+
+            Inches other = (Inches) obj;
+            return Double.compare(this.value, other.value) == 0;
+        }
+    }
+
+    // Static methods (reduce main dependency)
+    public static boolean compareFeet(double v1, double v2) {
+        return new Feet(v1).equals(new Feet(v2));
+    }
+
+    public static boolean compareInches(double v1, double v2) {
+        return new Inches(v1).equals(new Inches(v2));
+    }
+
+    public static void main(String[] args) {
+        System.out.println(compareFeet(1.0, 1.0));   // true
+        System.out.println(compareInches(1.0, 1.0)); // true
     }
 }
