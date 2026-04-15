@@ -1,13 +1,37 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-void main() {
-    //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-    // to see how IntelliJ IDEA suggests fixing it.
-    IO.println(String.format("Hello and welcome!"));
+class QuantityMeasurementApp {
 
-    for (int i = 1; i <= 5; i++) {
-        //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-        // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-        IO.println("i = " + i);
+    // Inner class
+    static class Feet {
+        private final double value;
+
+        // Constructor
+        public Feet(double value) {
+            this.value = value;
+        }
+
+        // Override equals method
+        @Override
+        public boolean equals(Object obj) {
+
+            // Same reference check
+            if (this == obj) return true;
+
+            // Null and type check
+            if (obj == null || getClass() != obj.getClass()) return false;
+
+            // Type casting
+            Feet other = (Feet) obj;
+
+            // Compare double safely
+            return Double.compare(this.value, other.value) == 0;
+        }
+    }
+
+    // Main method (for testing)
+    public static void main(String[] args) {
+        Feet f1 = new Feet(1.0);
+        Feet f2 = new Feet(1.0);
+
+        System.out.println("Are equal? " + f1.equals(f2));
     }
 }
