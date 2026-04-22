@@ -34,20 +34,23 @@ class QuantityLength {
         return unit.toFeet(value);
     }
 
-    public double convertTo(LengthUnit targetUnit) {
-        if (targetUnit == null) throw new IllegalArgumentException("Target unit cannot be null");
-        double feet = this.toFeet();
-        return targetUnit.fromFeet(feet);
+    public QuantityLength add(QuantityLength other) {
+        if (other == null) throw new IllegalArgumentException("Other cannot be null");
+
+        double sumFeet = this.toFeet() + other.toFeet();
+        double result = this.unit.fromFeet(sumFeet);
+
+        return new QuantityLength(result, this.unit);
     }
 
-    public static double convert(double value, LengthUnit source, LengthUnit target) {
-        if (source == null || target == null)
-            throw new IllegalArgumentException("Units cannot be null");
-        if (!Double.isFinite(value))
-            throw new IllegalArgumentException("Invalid value");
+    public static QuantityLength add(QuantityLength a, QuantityLength b, LengthUnit targetUnit) {
+        if (a == null || b == null || targetUnit == null)
+            throw new IllegalArgumentException("Invalid input");
 
-        double feet = source.toFeet(value);
-        return target.fromFeet(feet);
+        double sumFeet = a.toFeet() + b.toFeet();
+        double result = targetUnit.fromFeet(sumFeet);
+
+        return new QuantityLength(result, targetUnit);
     }
 
     @Override
@@ -68,12 +71,17 @@ class QuantityLength {
 public class QuantityMeasurementApp {
     public static void main(String[] args) {
 
-        System.out.println(QuantityLength.convert(1.0, LengthUnit.FEET, LengthUnit.INCH)); // 12.0
-        System.out.println(QuantityLength.convert(3.0, LengthUnit.YARD, LengthUnit.FEET)); // 9.0
-        System.out.println(QuantityLength.convert(36.0, LengthUnit.INCH, LengthUnit.YARD)); // 1.0
-        System.out.println(QuantityLength.convert(1.0, LengthUnit.CM, LengthUnit.INCH)); // ~0.393701
+        System.out.println(
+                new QuantityLength(1.0, LengthUnit.FEET)
+                        .add(new QuantityLength(12.0, LengthUnit.INCH))
+        ); // 2.0 FEET
 
-        QuantityLength q = new QuantityLength(1.0, LengthUnit.FEET);
-        System.out.println(q.convertTo(LengthUnit.INCH)); // 12.0
+        System.out.println(
+                QuantityLength.add(
+                        new QuantityLength(12.0, LengthUnit.INCH),
+                        new QuantityLength(1.0, LengthUnit.FEET),
+                        LengthUnit.INCH
+                )
+        ); // 24 INCH
     }
 }

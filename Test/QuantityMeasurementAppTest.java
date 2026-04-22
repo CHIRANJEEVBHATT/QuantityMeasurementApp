@@ -6,52 +6,57 @@ class QuantityMeasurementAppTest {
     double EPS = 1e-6;
 
     @Test
-    void testFeetToInches() {
-        assertEquals(12.0, QuantityLength.convert(1.0, LengthUnit.FEET, LengthUnit.INCH), EPS);
+    void testFeetPlusFeet() {
+        QuantityLength res = new QuantityLength(1, LengthUnit.FEET)
+                .add(new QuantityLength(2, LengthUnit.FEET));
+        assertEquals(3.0, res.add(new QuantityLength(0, LengthUnit.FEET)).add(new QuantityLength(0, LengthUnit.FEET)).toString().contains("3.0") ? 3.0 : 0.0);
     }
 
     @Test
-    void testInchesToFeet() {
-        assertEquals(2.0, QuantityLength.convert(24.0, LengthUnit.INCH, LengthUnit.FEET), EPS);
+    void testFeetPlusInch() {
+        QuantityLength res = new QuantityLength(1, LengthUnit.FEET)
+                .add(new QuantityLength(12, LengthUnit.INCH));
+        assertEquals(2.0, res.toString().contains("2.0") ? 2.0 : 0.0);
     }
 
     @Test
-    void testYardToInch() {
-        assertEquals(36.0, QuantityLength.convert(1.0, LengthUnit.YARD, LengthUnit.INCH), EPS);
+    void testInchPlusFeet() {
+        QuantityLength res = QuantityLength.add(
+                new QuantityLength(12, LengthUnit.INCH),
+                new QuantityLength(1, LengthUnit.FEET),
+                LengthUnit.INCH
+        );
+        assertEquals(24.0, res.toString().contains("24.0") ? 24.0 : 0.0);
     }
 
     @Test
-    void testCmToInch() {
-        assertEquals(1.0, QuantityLength.convert(2.54, LengthUnit.CM, LengthUnit.INCH), 1e-3);
-    }
-
-    @Test
-    void testRoundTrip() {
-        double val = 5.0;
-        double converted = QuantityLength.convert(val, LengthUnit.FEET, LengthUnit.INCH);
-        double back = QuantityLength.convert(converted, LengthUnit.INCH, LengthUnit.FEET);
-        assertEquals(val, back, EPS);
+    void testYardPlusFeet() {
+        QuantityLength res = QuantityLength.add(
+                new QuantityLength(1, LengthUnit.YARD),
+                new QuantityLength(3, LengthUnit.FEET),
+                LengthUnit.YARD
+        );
+        assertEquals(2.0, res.toString().contains("2.0") ? 2.0 : 0.0);
     }
 
     @Test
     void testZero() {
-        assertEquals(0.0, QuantityLength.convert(0.0, LengthUnit.FEET, LengthUnit.INCH), EPS);
+        QuantityLength res = new QuantityLength(5, LengthUnit.FEET)
+                .add(new QuantityLength(0, LengthUnit.INCH));
+        assertEquals(5.0, res.toString().contains("5.0") ? 5.0 : 0.0);
     }
 
     @Test
     void testNegative() {
-        assertEquals(-12.0, QuantityLength.convert(-1.0, LengthUnit.FEET, LengthUnit.INCH), EPS);
+        QuantityLength res = new QuantityLength(5, LengthUnit.FEET)
+                .add(new QuantityLength(-2, LengthUnit.FEET));
+        assertEquals(3.0, res.toString().contains("3.0") ? 3.0 : 0.0);
     }
 
     @Test
-    void testInvalidUnit() {
-        assertThrows(IllegalArgumentException.class, () ->
-                QuantityLength.convert(1.0, null, LengthUnit.FEET));
-    }
-
-    @Test
-    void testInvalidValue() {
-        assertThrows(IllegalArgumentException.class, () ->
-                QuantityLength.convert(Double.NaN, LengthUnit.FEET, LengthUnit.INCH));
+    void testNull() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new QuantityLength(1, LengthUnit.FEET).add(null);
+        });
     }
 }
