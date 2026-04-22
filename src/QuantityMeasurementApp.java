@@ -14,8 +14,8 @@ enum LengthUnit {
         return value * toFeetFactor;
     }
 
-    public double fromFeet(double valueInFeet) {
-        return valueInFeet / toFeetFactor;
+    public double fromFeet(double feetValue) {
+        return feetValue / toFeetFactor;
     }
 }
 
@@ -34,6 +34,7 @@ class QuantityLength {
         return unit.toFeet(value);
     }
 
+    // UC6 (existing)
     public QuantityLength add(QuantityLength other) {
         if (other == null) throw new IllegalArgumentException("Other cannot be null");
 
@@ -43,6 +44,7 @@ class QuantityLength {
         return new QuantityLength(result, this.unit);
     }
 
+    // UC7 (explicit target unit)
     public static QuantityLength add(QuantityLength a, QuantityLength b, LengthUnit targetUnit) {
         if (a == null || b == null || targetUnit == null)
             throw new IllegalArgumentException("Invalid input");
@@ -72,16 +74,27 @@ public class QuantityMeasurementApp {
     public static void main(String[] args) {
 
         System.out.println(
-                new QuantityLength(1.0, LengthUnit.FEET)
-                        .add(new QuantityLength(12.0, LengthUnit.INCH))
-        ); // 2.0 FEET
+                QuantityLength.add(
+                        new QuantityLength(1.0, LengthUnit.FEET),
+                        new QuantityLength(12.0, LengthUnit.INCH),
+                        LengthUnit.FEET
+                )
+        ); // 2 FEET
 
         System.out.println(
                 QuantityLength.add(
-                        new QuantityLength(12.0, LengthUnit.INCH),
                         new QuantityLength(1.0, LengthUnit.FEET),
+                        new QuantityLength(12.0, LengthUnit.INCH),
                         LengthUnit.INCH
                 )
         ); // 24 INCH
+
+        System.out.println(
+                QuantityLength.add(
+                        new QuantityLength(1.0, LengthUnit.FEET),
+                        new QuantityLength(12.0, LengthUnit.INCH),
+                        LengthUnit.YARD
+                )
+        ); // ~0.667 YARD
     }
 }

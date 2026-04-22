@@ -6,57 +6,84 @@ class QuantityMeasurementAppTest {
     double EPS = 1e-6;
 
     @Test
-    void testFeetPlusFeet() {
-        QuantityLength res = new QuantityLength(1, LengthUnit.FEET)
-                .add(new QuantityLength(2, LengthUnit.FEET));
-        assertEquals(3.0, res.add(new QuantityLength(0, LengthUnit.FEET)).add(new QuantityLength(0, LengthUnit.FEET)).toString().contains("3.0") ? 3.0 : 0.0);
-    }
-
-    @Test
-    void testFeetPlusInch() {
-        QuantityLength res = new QuantityLength(1, LengthUnit.FEET)
-                .add(new QuantityLength(12, LengthUnit.INCH));
-        assertEquals(2.0, res.toString().contains("2.0") ? 2.0 : 0.0);
-    }
-
-    @Test
-    void testInchPlusFeet() {
+    void testFeetTarget() {
         QuantityLength res = QuantityLength.add(
-                new QuantityLength(12, LengthUnit.INCH),
                 new QuantityLength(1, LengthUnit.FEET),
+                new QuantityLength(12, LengthUnit.INCH),
+                LengthUnit.FEET
+        );
+        assertEquals(2.0, QuantityLength.add(
+                new QuantityLength(1, LengthUnit.FEET),
+                new QuantityLength(12, LengthUnit.INCH),
+                LengthUnit.FEET
+        ).equals(res) ? 2.0 : 0.0);
+    }
+
+    @Test
+    void testInchTarget() {
+        QuantityLength res = QuantityLength.add(
+                new QuantityLength(1, LengthUnit.FEET),
+                new QuantityLength(12, LengthUnit.INCH),
                 LengthUnit.INCH
         );
         assertEquals(24.0, res.toString().contains("24.0") ? 24.0 : 0.0);
     }
 
     @Test
-    void testYardPlusFeet() {
+    void testYardTarget() {
         QuantityLength res = QuantityLength.add(
-                new QuantityLength(1, LengthUnit.YARD),
-                new QuantityLength(3, LengthUnit.FEET),
+                new QuantityLength(1, LengthUnit.FEET),
+                new QuantityLength(12, LengthUnit.INCH),
                 LengthUnit.YARD
         );
-        assertEquals(2.0, res.toString().contains("2.0") ? 2.0 : 0.0);
+        assertTrue(res.toString().contains("0.66"));
+    }
+
+    @Test
+    void testCommutative() {
+        QuantityLength a = QuantityLength.add(
+                new QuantityLength(1, LengthUnit.FEET),
+                new QuantityLength(12, LengthUnit.INCH),
+                LengthUnit.YARD
+        );
+
+        QuantityLength b = QuantityLength.add(
+                new QuantityLength(12, LengthUnit.INCH),
+                new QuantityLength(1, LengthUnit.FEET),
+                LengthUnit.YARD
+        );
+
+        assertTrue(a.equals(b));
     }
 
     @Test
     void testZero() {
-        QuantityLength res = new QuantityLength(5, LengthUnit.FEET)
-                .add(new QuantityLength(0, LengthUnit.INCH));
-        assertEquals(5.0, res.toString().contains("5.0") ? 5.0 : 0.0);
+        QuantityLength res = QuantityLength.add(
+                new QuantityLength(5, LengthUnit.FEET),
+                new QuantityLength(0, LengthUnit.INCH),
+                LengthUnit.YARD
+        );
+        assertTrue(res.toString().contains("1.66"));
     }
 
     @Test
     void testNegative() {
-        QuantityLength res = new QuantityLength(5, LengthUnit.FEET)
-                .add(new QuantityLength(-2, LengthUnit.FEET));
-        assertEquals(3.0, res.toString().contains("3.0") ? 3.0 : 0.0);
+        QuantityLength res = QuantityLength.add(
+                new QuantityLength(5, LengthUnit.FEET),
+                new QuantityLength(-2, LengthUnit.FEET),
+                LengthUnit.INCH
+        );
+        assertTrue(res.toString().contains("36.0"));
     }
 
     @Test
-    void testNull() {
+    void testNullTarget() {
         assertThrows(IllegalArgumentException.class, () -> {
-            new QuantityLength(1, LengthUnit.FEET).add(null);
+            QuantityLength.add(
+                    new QuantityLength(1, LengthUnit.FEET),
+                    new QuantityLength(12, LengthUnit.INCH),
+                    null
+            );
         });
     }
 }
